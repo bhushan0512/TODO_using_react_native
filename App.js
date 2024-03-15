@@ -1,6 +1,14 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View, StatusBar, ScrollView } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  StatusBar,
+  ScrollView,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function App() {
   const [goalsList, setGoalsList] = useState([]);
@@ -45,10 +53,20 @@ export default function App() {
         <ScrollView contentContainerStyle={styles.outputList}>
           {goalsList.map((goal, index) => (
             <View style={styles.list} key={index}>
-            <Ionicons style={styles.icon} name="logo-ionic" size={24} color="#7b2cbf" />
+              <Ionicons
+                style={styles.icon}
+                name="logo-ionic"
+                size={24}
+                color="#7b2cbf"
+              />
               <Text style={styles.listItemText}>{goal.text}</Text>
               <Pressable onPress={() => handleDeleteGoal(index)}>
-                <Ionicons style={styles.icon} name="trash" size={24} color="red" />
+                <Ionicons
+                  style={styles.icon}
+                  name="trash"
+                  size={24}
+                  color="red"
+                />
               </Pressable>
             </View>
           ))}
@@ -148,15 +166,14 @@ const styles = StyleSheet.create({
     marginTop: 1,
     width: "100%",
     alignItems: "center",
-    marginBottom:"100%"
+    marginBottom: "100%",
   },
   list: {
     margin: "1%",
     borderRadius: "18%",
     backgroundColor: "#fff",
-    height: "200%",
-    width: "90%",
-    height: "13%",
+    height: 70,
+    width: 350,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 8,
@@ -173,7 +190,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     flex: 1, // To make the text occupy remaining space
   },
-  icon:{
-    padding:"5%"
-  }
+  icon: {
+    padding: "5%",
+  },
 });
