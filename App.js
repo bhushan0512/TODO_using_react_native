@@ -7,6 +7,11 @@ import {
   View,
   StatusBar,
   ScrollView,
+  Switch,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  TouchableHighlight,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -16,7 +21,7 @@ export default function App() {
 
   const handleAddGoals = () => {
     if (textInput.trim() !== "") {
-      setGoalsList([...goalsList, { text: textInput }]);
+      setGoalsList([...goalsList, { text: textInput, isEnabled: false }]);
       setTextInput("");
     }
   };
@@ -31,11 +36,31 @@ export default function App() {
     setGoalsList(updatedGoalsList);
   };
 
+  const toggleSwitch = (index) => {
+    const updatedGoalsList = [...goalsList];
+    updatedGoalsList[index].isEnabled = !updatedGoalsList[index].isEnabled;
+    setGoalsList(updatedGoalsList);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.appbar}>
-        <Text style={styles.title}>TO DO List</Text>
+      <View style={ styles.imageBg }>
+      <Image
+      style={
+        {
+          width:60,
+          height:60,
+          resizeMode:"",
+        }
+      }
+      // source={require("./assets/favicon.png")}
+      source={{ uri:"https://imgs.search.brave.com/-OsWAftRr0awhB5QhCul6kjActClNJ_WgRLWNbVcSro/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9wbHVz/cG5nLmNvbS9pbWct/cG5nL3RvLWRvLWxp/c3QtcG5nLXRoZS1w/b3dlci1vZi1hLXRv/LWRvLWxpc3QtaW1v/ZGVsYWZyaWNhLTEw/MjQucG5n" }}
+
+      /></View>
+      <Text style={styles.title}>TO DO List</Text>
       </View>
+      
       <View style={styles.inputCard}>
         <TextInput
           placeholder="Enter your Goals..."
@@ -44,20 +69,20 @@ export default function App() {
           value={textInput}
           onChangeText={handleChangeText}
         />
-        <Pressable style={styles.button} onPress={handleAddGoals}>
+        <TouchableHighlight style={styles.button} onPress={handleAddGoals} underlayColor={"#9B59B6"}>
           <Text style={styles.buttonText}>ADD</Text>
-        </Pressable>
+        </TouchableHighlight>
       </View>
-      <View style={styles.outputCard}>
+      {/* <View style={styles.outputCard}>
         <Text style={styles.outputHeader}>TO DO ITEMS</Text>
         <ScrollView contentContainerStyle={styles.outputList}>
           {goalsList.map((goal, index) => (
             <View style={styles.list} key={index}>
-              <Ionicons
-                style={styles.icon}
-                name="logo-ionic"
-                size={24}
-                color="#7b2cbf"
+              <Switch
+                style={styles.switch}
+                trackColor={{ false: "#767577", true: "#A569BD" }}
+                onValueChange={() => toggleSwitch(index)}
+                value={goal.isEnabled}
               />
               <Text style={styles.listItemText}>{goal.text}</Text>
               <Pressable onPress={() => handleDeleteGoal(index)}>
@@ -71,8 +96,80 @@ export default function App() {
             </View>
           ))}
         </ScrollView>
+      </View> */}
+      
+      <View style={styles.outputCard}>
+        <Text style={styles.outputHeader}>TO DO ITEMS</Text>
+        <FlatList
+          data={goalsList}
+          renderItem={({ item, index }) => (
+            <View style={styles.list} key={index}>
+              <Switch
+                style={styles.switch}
+                trackColor={{ false: "#767577", true: "#A569BD" }}
+                onValueChange={() => toggleSwitch(index)}
+                value={item.isEnabled}
+              />
+              <Text style={styles.listItemText}>{item.text}</Text>
+              <TouchableOpacity onPress={() => handleDeleteGoal(index)}>
+                <Ionicons
+                  style={styles.icon}
+                  name="trash"
+                  size={24}
+                  color="red"
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
       </View>
+
+      
+
+      {/* <View style={styles.outputCard}>
+        <Text style={styles.outputHeader}>TO DO ITEMS</Text>
+        <ScrollView contentContainerStyle={styles.outputList}>
+          {goalsList.map((goal, index) => (
+            <View style={styles.list} key={index}>
+              <Switch
+                style={styles.switch}
+                trackColor={{ false: "#767577", true: "#A569BD" }}
+                onValueChange={() => toggleSwitch(index)}
+                value={goal.isEnabled}
+              />
+              <Text style={styles.listItemText}>{goal.text}</Text>
+              <Pressable onPress={() => handleDeleteGoal(index)}>
+                <Ionicons
+                  style={styles.icon}
+                  name="trash"
+                  size={24}
+                  color="red"
+                />
+              </Pressable>
+            </View>
+          ))}
+        </ScrollView>
+      </View> */}
+      
       <StatusBar style="auto" />
+      <TouchableOpacity
+                style={styles.floatingButton} 
+                onPress={() => { alert('Button is pressed') }} 
+            > 
+                <Image
+      style={
+        {
+          width:25,
+          height:25,
+          resizeMode:"contain",
+        }
+      }
+      // source={require("./assets/favicon.png")}
+      source={{ uri:"https://www.iconsdb.com/icons/preview/white/plus-xxl.png" }}
+
+      />
+            </TouchableOpacity> 
     </View>
   );
 }
@@ -87,18 +184,21 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "center",
     alignItems: "center",
+    alignSelf:"center",
     paddingTop: "15%",
     paddingBottom: "2%",
     backgroundColor: "#9B59B6",
     width: "100%",
     height: "14%",
     fontSize: 24,
+    flexDirection: "row",
   },
   title: {
     color: "white",
     fontSize: "30%",
     fontWeight: "700",
     fontFamily: "Poppins",
+    marginLeft:"3%"
   },
   textInput: {
     borderRadius: "20%",
@@ -178,6 +278,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 8,
     flexDirection: "row",
+    paddingLeft: "5%",
+    paddingRight: "5%",
   },
   listItemText: {
     fontSize: 20,
@@ -190,7 +292,27 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     flex: 1, // To make the text occupy remaining space
   },
-  icon: {
-    padding: "5%",
+  imageBg:{
+    backgroundColor: "#E5DAE8",
+    // marginTop: "5%",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf:"center",
+    // borderRadius: "35%",
+    borderRadius:"100%",
+    // marginBottom:"2.5%"
   },
+  floatingButton:{ 
+    borderWidth: 1, 
+    borderColor: '#9B59B6', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    padding:20,
+    position: 'absolute', 
+    bottom: "6%", 
+    right: "14%", 
+    // elevation:5,
+    backgroundColor: '#9B59B6', 
+    borderRadius: 100,
+}
 });
